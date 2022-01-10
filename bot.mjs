@@ -1,19 +1,10 @@
-import { Server } from "./server.mjs";
+import { Agent } from "./agent.mjs";
 
-class Location {
-  constructor(state, board) {}
+const agent = new Agent("awesome bot");
+
+const myArgs = process.argv.slice(2);
+if (myArgs[0]) {
+  agent.joinGame(myArgs[0]);
+} else {
+  agent.startSoloGame();
 }
-
-const loc = new Location({}, {});
-const server = new Server();
-
-// create game
-await server.post(
-  "/",
-  {},
-  {
-    seats: 0,
-    turns: 0,
-    initial_garbage: 0,
-  }
-);
