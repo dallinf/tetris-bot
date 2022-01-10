@@ -1,0 +1,21 @@
+{
+  "dependencies": {
+    "node-fetch": "^3.1.0"
+  },
+  "type": "module",
+  "name": "tetris-bot",
+  "description": "",
+  "version": "1.0.0",
+  "main": "bot.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node --experimental-modules bot.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@gitlab-ssh.podium.com:dallin.frandsen/tetris-bot.git"
+  },
+  "author": "",
+  "license": "ISC"
+}
