@@ -1,15 +1,28 @@
 import fetch from "node-fetch";
 
-const url = "https://saguaro-pajitnov.herokuapp.com:443";
+const url = "http://saguaro-pajitnov.herokuapp.com";
 
 export class Server {
-  async post(path, params) {
-    const response = await fetch(`${url}${path}`, {
+  async createGame(params) {
+    const response = await fetch(`${url}/`, {
       method: "POST",
       body: JSON.stringify(params),
     });
+
+    const gameId = response.headers.get("location");
+    const gameID = gameId.substring(1);
+    return gameID;
+  }
+
+  async joinGame(gameId, playerName) {
+    const response = await fetch(`${url}/${gameId}/players`, {
+      method: "POST",
+      body: JSON.stringify({ name: playerName }),
+    });
     const data = await response.json();
 
-    console.log(data);
+    const gameId = response.headers;
+    console.log(gameId);
+    // console.log(data);
   }
 }
