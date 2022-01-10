@@ -18,7 +18,7 @@ export class Game {
     this.currentPiece = state["current_piece"];
     this.nextPiece = state["next_piece"];
     state["players"].forEach((player) => {
-      id = player["id"];
+      const id = player["id"];
       this.players[id] = new Player();
       this.players[id].update(player);
     });

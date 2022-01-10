@@ -9,7 +9,7 @@ if (myArgs[0]) {
   await agent.startSoloGame("Bot One");
 }
 
-agent.run();
+await agent.run();
 
 // const PLAYER_NAME = "BOT_ONE";
 // // create game

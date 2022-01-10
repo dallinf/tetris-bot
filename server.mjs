@@ -21,9 +21,8 @@ export class Server {
       body: JSON.stringify({ name: playerName }),
     });
     const data = await response.json();
-    const turnToken = response.headers["X-Turn-Token"];
-    const playerId = response.headers["X-Player-Id"];
-    console.log(data);
+    const turnToken = response.headers.get("X-Turn-Token");
+    const playerId = response.headers.get("X-Player-Id");
 
     return { turnToken, playerId, data };
   }
