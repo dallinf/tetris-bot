@@ -7,6 +7,8 @@ export class Server {
     const response = await fetch(`${url}/`, {
       method: "POST",
       body: JSON.stringify(params),
+      // body: params,
+      headers,
     });
 
     const gameId = response.headers.get("location");

@@ -10,7 +10,7 @@
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node --experimental-modules bot.mjs"
+    "start": "node bot.mjs"
   },
   "repository": {
     "type": "git",
