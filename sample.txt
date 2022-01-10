@@ -1,0 +1,20 @@
+{
+  id: '048d4dec',
+  players: [
+    {
+      id: '3b06b686',
+      name: 'Bot One',
+      score: 0,
+      disqualified: false,
+      lines: 0,
+      last_move: null,
+      board: [Array]
+    }
+  ],
+  state: 'in play',
+  rows: 20,
+  cols: 10,
+  current_piece: 'T',
+  next_piece: 'O',
+  disqualified: []
+}

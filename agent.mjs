@@ -17,31 +17,17 @@ export class Agent {
     this.server = new Server();
   }
 
-  async startSoloGame() {
-    const response = await this.server.post(
-      "/",
-      JSON.stringify({
-        seats: 0,
-        turns: 0,
-        initial_garbage: 0,
-      })
-    );
-    console.log("asdf");
-    console.log(response);
-    // console.log(JSON.parse(response));
-    this.joinGame(response["location"]);
-  }
-
-  joinGame(location) {
-    this.location = location;
-    const response = this.server.post(location + "/players", {
-      name: this.gameName,
+  async startSoloGame(playerName) {
+    const gameId = await this.server.createGame({
+      seats: 1,
+      turns: 1,
+      initial_garbage: 0,
     });
-    this.turnToken = response["X-Turn-Token"];
-    this.playerId = response["X-Player-Id"];
-    this.updateGame(JSON.parse(response.body));
-    this.player = this.game.player(this.playerId);
-    this.board = this.player.board;
+
+    const currentState = await this.server.joinGame(gameId, playerName);
+    this.game.update(currentState.data);
+    this.playerId = currentState.playerId;
+    this.player = this.game.getPlayer(currentState.playerId);
   }
 
   updateGame(game) {
@@ -49,8 +35,11 @@ export class Agent {
   }
 
   run() {
-    while (this.game.active) {
-      move = this.board.next_valid_placement(this.game.current_piece);
+    while (this.game.isActive) {
+      move = this.board.nextValidPlacement(
+        this.game.currentPiece,
+        this.player.board
+      );
       // # no move = make intentionally invalid move, can't win
       move = move ? move.as_json() : {};
       response = this.server.post(this.location + "/moves", move, {
