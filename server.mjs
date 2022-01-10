@@ -19,10 +19,24 @@ export class Server {
       method: "POST",
       body: JSON.stringify({ name: playerName }),
     });
-    const data = await response.json();
 
-    const gameId = response.headers;
-    console.log(gameId);
-    // console.log(data);
+    const xTurnToken = response.headers.get("X-Turn-Token");
+    const xPlayerId = response.headers.get("X-Player-Id");
+    return { xTurnToken, xPlayerId };
+  }
+
+  async playerMoves(gameId, xTurnToken, xPlayerId, params) {
+    const response = await fetch(`${url}/${gameId}/moves`, {
+      method: "POST",
+      headers: {
+        "X-Turn-Token": xTurnToken,
+        "X-Player-Id": xPlayerId,
+      },
+      body: JSON.stringify(params),
+    });
+    const statusCode = await response.status;
+    const responseText = await response.text();
+
+    return { statusCode, responseText };
   }
 }
