@@ -27,4 +27,19 @@ export class Server {
 
     return { turnToken, playerId, data };
   }
+
+  async playerMoves(gameId, xTurnToken, xPlayerId, params) {
+    const response = await fetch(`${url}/${gameId}/moves`, {
+      method: "POST",
+      headers: {
+        "X-Turn-Token": xTurnToken,
+        "X-Player-Id": xPlayerId,
+      },
+      body: JSON.stringify(params),
+    });
+    const statusCode = await response.status;
+    const responseText = await response.text();
+
+    return { statusCode, responseText };
+  }
 }
