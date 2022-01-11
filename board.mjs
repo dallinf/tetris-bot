@@ -18,7 +18,7 @@ export class Board {
     // TODO
     // move.support.any?{ |l| l.row < 0 or at(l) } and
     // move.above.all?{ |l| not at(l) }
-    return false;
+    return true;
   }
 
   rotatePiece(piece) {
@@ -38,9 +38,22 @@ export class Board {
     // rotate piece 4 times, see how many rows it clears
   }
 
-  // board: []
-  howManyRowsClear(board, piece) {
+  applyPiece(piece) {
+    if (this.isValid(this, piece)) {
+      let newBoard = JSON.parse(JSON.stringify(this.state));
+      piece.forEach((block) => {
+        newBoard[block[0]][block[1]] = "x";
+      });
+
+      return newBoard;
+    }
+
+    return null;
+  }
+
+  countClearedRows(piece) {
     // TODO:
     // Figure out how many rows this would clear
+    return 0;
   }
 }

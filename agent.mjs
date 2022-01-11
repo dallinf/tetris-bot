@@ -12,6 +12,7 @@ export class Agent {
   playerId;
   player;
   board;
+  time = 0;
 
   constructor(gameName) {
     this.gameName = gameName;
@@ -22,7 +23,6 @@ export class Agent {
   async startSoloGame(playerName) {
     this.gameId = await this.server.createGame({
       seats: 1,
-      turns: 1,
       initial_garbage: 0,
     });
 
@@ -31,6 +31,7 @@ export class Agent {
     this.playerId = currentState.playerId;
     this.turnToken = currentState.turnToken;
     this.player = this.game.getPlayer(currentState.playerId);
+    // this.board = this.player.board;
   }
 
   updateGame(game) {
@@ -40,15 +41,24 @@ export class Agent {
   async run() {
     while (this.game.isActive) {
       // Figure out the next best move
-      const x = Move.pieceToRowCol(Move.convertPiece(this.game.currentPiece));
+      let x;
+      const pieceName = Move.convertPiece(this.game.currentPiece);
+
+      if (this.time === 0) {
+        x = Move.pieceToRowCol(pieceName);
+      } else {
+        x = Move.pieceToRowCol(Move.shift(pieceName, 0, 5));
+      }
+
       console.log(x);
-      const a = await this.server.playerMoves(
+      const moveResponse = await this.server.playerMoves(
         this.gameId,
         this.turnToken,
         this.playerId,
         { locations: x }
       );
 
+      this.time++;
       // move = this.board.nextValidPlacement(
       //   this.game.currentPiece,
       //   this.player.board
@@ -56,18 +66,15 @@ export class Agent {
 
       // Make that move
       // # no move = make intentionally invalid move, can't win
-      move = move ? move.as_json() : {};
-      response = this.server.post(this.location + "/moves", move, {
-        "X-Turn-Token": this.turnToken,
-      });
-      if (response.code !== "200") {
+      // move = move ? move.as_json() : {};
+      if (moveResponse.statusCode !== 200) {
         console.log(response.body);
         break;
       } else {
-        this.turnToken = response["X-Turn-Token"];
-        // TODO
-        // Update the board
-        this.updateGame(JSON.parse(response.body));
+        // Does the turn token change?
+        this.turnToken = moveResponse.turnToken;
+        this.updateGame(moveResponse.data);
+        console.log(this.game);
       }
     }
   }

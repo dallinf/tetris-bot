@@ -25,7 +25,7 @@ export class Game {
   }
 
   getPlayer(id) {
-    this.players[id];
+    return this.players[id];
   }
 
   isActive() {

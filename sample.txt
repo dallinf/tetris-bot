@@ -18,3 +18,127 @@
   next_piece: 'O',
   disqualified: []
 }
+
+
+board: [
+    [
+      'J',  'J',  null,
+      null, null, null,
+      null, null, null,
+      null
+    ],
+    [
+      null, 'J',  null,
+      null, null, null,
+      null, null, null,
+      null
+    ],
+    [
+      null, 'J',  null,
+      null, null, null,
+      null, null, null,
+      null
+    ],
+    [
+      null, null, null,
+      null, null, null,
+      null, null, null,
+      null
+    ],
+    [
+      null, null, null,
+      null, null, null,
+      null, null, null,
+      null
+    ],
+    [
+      null, null, null,
+      null, null, null,
+      null, null, null,
+      null
+    ],
+    [
+      null, null, null,
+      null, null, null,
+      null, null, null,
+      null
+    ],
+    [
+      null, null, null,
+      null, null, null,
+      null, null, null,
+      null
+    ],
+    [
+      null, null, null,
+      null, null, null,
+      null, null, null,
+      null
+    ],
+    [
+      null, null, null,
+      null, null, null,
+      null, null, null,
+      null
+    ],
+    [
+      null, null, null,
+      null, null, null,
+      null, null, null,
+      null
+    ],
+    [
+      null, null, null,
+      null, null, null,
+      null, null, null,
+      null
+    ],
+    [
+      null, null, null,
+      null, null, null,
+      null, null, null,
+      null
+    ],
+    [
+      null, null, null,
+      null, null, null,
+      null, null, null,
+      null
+    ],
+    [
+      null, null, null,
+      null, null, null,
+      null, null, null,
+      null
+    ],
+    [
+      null, null, null,
+      null, null, null,
+      null, null, null,
+      null
+    ],
+    [
+      null, null, null,
+      null, null, null,
+      null, null, null,
+      null
+    ],
+    [
+      null, null, null,
+      null, null, null,
+      null, null, null,
+      null
+    ],
+    [
+      null, null, null,
+      null, null, null,
+      null, null, null,
+      null
+    ],
+    [
+      null, null, null,
+      null, null, null,
+      null, null, null,
+      null
+    ]
+]

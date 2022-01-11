@@ -60,6 +60,12 @@ export class Move {
     }
   }
 
+  static shift(piece, row, col) {
+    return piece.map((loc) => {
+      return [loc[0] + row, loc[1] + col];
+    });
+  }
+
   static pieceToRowCol(pieceArray) {
     return pieceArray.map((inner) => {
       return {
@@ -69,8 +75,8 @@ export class Move {
     });
   }
 
-  static convertPiece(piece) {
-    switch (piece) {
+  static convertPiece(pieceName) {
+    switch (pieceName) {
       case "I":
         return [
           [0, 0],
