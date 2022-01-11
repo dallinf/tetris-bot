@@ -18,6 +18,7 @@ export class Board {
     // TODO
     // move.support.any?{ |l| l.row < 0 or at(l) } and
     // move.above.all?{ |l| not at(l) }
+    return false;
   }
 
   rotatePiece(piece) {
