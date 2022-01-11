@@ -1,7 +1,7 @@
 import { Game } from "./game.mjs";
 import { Move } from "./move.mjs";
 import { Server } from "./server.mjs";
-
+import { Board } from "./board.mjs";
 export class Agent {
   gameName;
   game;
@@ -12,7 +12,6 @@ export class Agent {
   playerId;
   player;
   board;
-  time = 0;
 
   constructor(gameName) {
     this.gameName = gameName;
@@ -31,50 +30,66 @@ export class Agent {
     this.playerId = currentState.playerId;
     this.turnToken = currentState.turnToken;
     this.player = this.game.getPlayer(currentState.playerId);
-    // this.board = this.player.board;
+    this.board = this.player.board;
   }
 
   updateGame(game) {
     this.game.update(game);
+    this.player = this.game.getPlayer(this.playerId);
+    this.board = this.player.board;
   }
 
   async run() {
-    while (this.game.isActive) {
+    let activeGame = true;
+    let wait = 0;
+
+    while (activeGame && this.game.isActive) {
       // Figure out the next best move
       let x;
-      const pieceName = Move.convertPiece(this.game.currentPiece);
+      const piece = Move.convertPiece(this.game.currentPiece);
 
-      if (this.time === 0) {
-        x = Move.pieceToRowCol(pieceName);
+      const newPiece = this.board.nextValidPlacement(piece);
+
+      if (newPiece) {
+        const playerMoveParams = Move.pieceToRowCol(newPiece);
+
+        console.log(playerMoveParams);
+        const moveResponse = await this.server.playerMoves(
+          this.gameId,
+          this.turnToken,
+          this.playerId,
+          { locations: playerMoveParams }
+        );
+
+        // Make that move
+        // # no move = make intentionally invalid move, can't win
+        // move = move ? move.as_json() : {};
+        if (moveResponse.statusCode !== 200) {
+          console.log(moveResponse);
+          break;
+        } else if (moveResponse.statusCode === 403) {
+          console.log("invalid move");
+        } else if (moveResponse.statusCode === 410) {
+          // we lost
+          activeGame = false;
+        } else {
+          this.turnToken = moveResponse.turnToken;
+          this.updateGame(moveResponse.data);
+        }
+
+        wait = 0;
       } else {
-        x = Move.pieceToRowCol(Move.shift(pieceName, 0, 5));
-      }
-
-      console.log(x);
-      const moveResponse = await this.server.playerMoves(
-        this.gameId,
-        this.turnToken,
-        this.playerId,
-        { locations: x }
-      );
-
-      this.time++;
-      // move = this.board.nextValidPlacement(
-      //   this.game.currentPiece,
-      //   this.player.board
-      // );
-
-      // Make that move
-      // # no move = make intentionally invalid move, can't win
-      // move = move ? move.as_json() : {};
-      if (moveResponse.statusCode !== 200) {
-        console.log(response.body);
-        break;
-      } else {
-        // Does the turn token change?
-        this.turnToken = moveResponse.turnToken;
-        this.updateGame(moveResponse.data);
-        console.log(this.game);
+        if (wait > 10) {
+          activeGame = false;
+        } else {
+          const myPromise = new Promise((resolve) => {
+            setTimeout(() => {
+              wait += 1;
+              resolve();
+            }, 1000);
+          });
+          await myPromise;
+        }
       }
     }
   }

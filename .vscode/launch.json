@@ -5,6 +5,18 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Debug tests single run",
+            "type": "node",
+            "request": "launch",
+            "env": { "CI": "true" },
+            "runtimeExecutable": "npm",
+            "args": ["test", "--runInBand", "--no-cache"],
+            "cwd": "${workspaceRoot}",
+            "protocol": "inspector",
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen"
+          },
+        {
             "type": "pwa-node",
             "request": "launch",
             "name": "Launch Program",

@@ -37,23 +37,19 @@ export class Server {
       body: JSON.stringify(params),
     });
     const statusCode = await response.status;
-    // const responseText = await response.text();
-    // const x = await response.body();
-    // const x = await response.json();
-    const a = response.headers.raw();
-    console.log(a);
     const turnToken = response.headers.get("X-Turn-Token");
     const playerId = response.headers.get("X-Player-Id");
 
     let data;
-    try {
-      for await (const chunk of response.body) {
-        data = JSON.parse(chunk.toString());
-        console.log(data);
-        break;
+    if (statusCode === 200) {
+      try {
+        for await (const chunk of response.body) {
+          data = JSON.parse(chunk.toString());
+          break;
+        }
+      } catch (err) {
+        console.error(err.stack);
       }
-    } catch (err) {
-      console.error(err.stack);
     }
 
     return { statusCode, turnToken, playerId, data };
