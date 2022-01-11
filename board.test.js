@@ -96,6 +96,59 @@ describe("Board", () => {
       piece = Move.shift(piece, 0, 8);
       expect(b.isValid(piece)).toBeFalsy();
     });
+
+    test("test 1", () => {
+      const b = new Board();
+      data = [
+        ["I", "T", "T", "T", "T", "T", "T", "L", "L", null],
+        ["I", "I", "Z", null, "J", "I", "I", "L", "O", "O"],
+        [null, "I", "Z", "Z", "I", "I", "I", null, "T", null],
+        ["J", "J", "Z", "Z", "I", "I", "T", "T", "T", null],
+        [null, "J", null, "Z", "I", "O", "O", "T", "O", "O"],
+        [null, "J", "S", "S", "I", "O", "O", "Z", "O", "O"],
+        ["T", "T", "T", "S", "S", "S", "S", "Z", "Z", null],
+        ["I", "T", "L", "L", "L", "L", "S", "S", "Z", null],
+        ["I", null, "L", null, "L", "L", "L", "Z", null, null],
+        ["I", "Z", "L", null, "L", "L", null, "Z", "Z", null],
+        ["I", "Z", "Z", "L", "L", "L", null, null, "Z", null],
+        [null, null, "Z", "L", null, null, null, null, null, null],
+        [null, null, null, "L", null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null, null, null],
+      ];
+      b.state = data;
+
+      let piece = [
+        [8, 8],
+        [8, 9],
+        [9, 9],
+        [10, 9],
+      ];
+      expect(b.isValid(piece)).toBeFalsy();
+    });
+
+    test("no floating pieces", () => {
+      const b = new Board();
+      b.state = data;
+
+      let piece = Move.convertPiece("T");
+      piece = Move.shift(piece, 1, 0);
+      expect(b.isValid(piece)).toBeFalsy();
+    });
+
+    test("no floating O pieces", () => {
+      const b = new Board();
+      b.state = data;
+
+      let piece = Move.convertPiece("O");
+      piece = Move.shift(piece, 1, 0);
+      expect(b.isValid(piece)).toBeFalsy();
+    });
   });
 
   describe("countClearedRows", () => {
@@ -109,6 +162,22 @@ describe("Board", () => {
       const newState = b.applyPiece(piece);
       expect(b.countClearedRows(newState)).toBe(1);
     });
+  });
+
+  describe("countGaps", () => {
+    test("second row with a gap", () => {
+      const b = new Board();
+      data[0] = [null, "J", "J", null, "L", "O", "O", "O", "L", null];
+      b.state = data;
+
+      let piece = Move.convertPiece("I");
+      piece = Move.rotate(piece);
+      piece = Move.shift(piece, 1, 0);
+      const newState = b.applyPiece(piece);
+      expect(b.countGaps(newState)).toBe(2);
+    });
+
+    test("");
   });
 
   describe("applyPiece", () => {
@@ -133,7 +202,8 @@ describe("Board", () => {
       b.state = data;
 
       const piece = Move.convertPiece("I");
-      expect(b.evaluatePieceLocation(piece)).toBeLessThan(0);
+      const { score } = b.evaluatePieceLocation(piece);
+      expect(score).toBeLessThan(0);
     });
   });
 });

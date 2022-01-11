@@ -1,4 +1,8 @@
 import { Move } from "./move.mjs";
+
+const GAP_WEIGHT = -5;
+const CLEARED_WEIGHT = 1;
+const HEIGHT_WEIGHT = -5;
 export class Board {
   //   attr_reader :topmost, :rightmost
   state;
@@ -21,6 +25,7 @@ export class Board {
     }
 
     let result = true;
+    let pieceBelow = false;
 
     piece.forEach((block) => {
       let row = block[0];
@@ -41,31 +46,35 @@ export class Board {
         }
 
         // can go straight down
-        for (let i = row + 1; i < this.state[row].length - 1; i++) {
+        for (let i = row + 1; i < this.state.length - 1; i++) {
           if (this.state[i][col]) {
             result = false;
           }
         }
+
+        // must have at least one piece directly below
+        if (row === 0) {
+          pieceBelow = true;
+        } else if (row - 1 >= 0 && this.state[row - 1][col]) {
+          pieceBelow = true;
+        }
       }
     });
-    return result;
-  }
 
-  rotatePiece(piece) {
-    // TODO
+    return result && pieceBelow;
   }
 
   nextValidPlacement(piece) {
     let bestPlace;
-    let bestScore = -1;
+    let bestScore = -1000000;
 
     for (let i = 0; i < this.state.length - 1; i++) {
       for (let j = 0; j < this.state[i].length - 1; j++) {
         const newPlace = Move.shift(piece, i, j);
-        const score = this.evaluatePieceLocation(newPlace);
+        const { score, place } = this.evaluatePieceLocation(newPlace);
 
         if (score > bestScore) {
-          bestPlace = newPlace;
+          bestPlace = place;
           bestScore = score;
         }
       }
@@ -75,12 +84,31 @@ export class Board {
   }
 
   evaluatePieceLocation(piece) {
-    if (!this.isValid(piece)) {
-      return -1;
+    let bestPiece = piece;
+    let bestScore = -1000000;
+
+    for (let i = 0; i < 4; i++) {
+      // check all 4 rotations
+      const rotated = Move.rotate(piece);
+
+      if (this.isValid(rotated)) {
+        const newState = this.applyPiece(rotated);
+        const clearedRows = this.countClearedRows(newState);
+        const gaps = this.countGaps(newState);
+        const height = this.countHeight(newState);
+        const score =
+          gaps * GAP_WEIGHT +
+          clearedRows * CLEARED_WEIGHT +
+          height * HEIGHT_WEIGHT;
+
+        if (score > bestScore) {
+          bestScore = score;
+          bestPiece = rotated;
+        }
+      }
     }
 
-    const newState = this.applyPiece(piece);
-    return this.countClearedRows(newState);
+    return { score: bestScore, place: bestPiece };
   }
 
   applyPiece(piece) {
@@ -95,9 +123,9 @@ export class Board {
   countClearedRows(newState) {
     let clearedRows = 0;
     if (newState) {
-      newState.forEach((rows) => {
+      newState.forEach((row) => {
         let cleared = true;
-        rows.forEach((col) => {
+        row.forEach((col) => {
           if (!col) {
             cleared = false;
           }
@@ -110,5 +138,44 @@ export class Board {
     }
 
     return clearedRows;
+  }
+
+  countGaps(newState) {
+    let gaps = 0;
+
+    if (newState) {
+      for (let j = 0; j < newState[0].length - 1; j++) {
+        let foundBlock = false;
+
+        for (let i = newState.length - 1; i >= 0; i--) {
+          if (foundBlock && !newState[i][j]) {
+            gaps++;
+          }
+          if (newState[i][j]) {
+            foundBlock = true;
+          }
+        }
+      }
+    }
+
+    return gaps;
+  }
+
+  countHeight(newState) {
+    let maxHeight = 0;
+
+    if (newState) {
+      for (let j = 0; j < newState[0].length - 1; j++) {
+        for (let i = newState.length - 1; i >= 0; i--) {
+          if (newState[i][j]) {
+            if (i > maxHeight) {
+              maxHeight = i;
+            }
+          }
+        }
+      }
+    }
+
+    return maxHeight;
   }
 }

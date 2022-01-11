@@ -64,11 +64,10 @@ export class Agent {
         // Make that move
         // # no move = make intentionally invalid move, can't win
         // move = move ? move.as_json() : {};
-        if (moveResponse.statusCode !== 200) {
-          console.log(moveResponse);
-          break;
-        } else if (moveResponse.statusCode === 403) {
+        if (moveResponse.statusCode === 403) {
           console.log("invalid move");
+          console.log(this.board);
+          console.log(playerMoveParams);
         } else if (moveResponse.statusCode === 410) {
           // we lost
           activeGame = false;
