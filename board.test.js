@@ -177,7 +177,31 @@ describe("Board", () => {
       expect(b.countGaps(newState)).toBe(2);
     });
 
-    test("");
+    test("where there are gaps to the floor", () => {
+      const b = new Board();
+      data[3] = ["I", "I", "I", "I", "I", "I", "I", "I", "I", null];
+      data[2] = ["I", "I", "I", "I", "I", "I", "I", "I", "I", null];
+      data[1] = ["I", "I", "I", "I", "I", "I", "I", "I", "I", null];
+      data[0] = ["I", "I", "I", "I", "I", "I", "I", "I", "I", null];
+      b.state = data;
+
+      let piece = Move.convertPiece("Z");
+      piece = Move.shift(piece, 4, 8);
+
+      const newState = b.applyPiece(piece);
+      expect(b.countGaps(newState)).toBe(5);
+    });
+  });
+
+  describe("countHeight", () => {
+    test("last column", () => {
+      const b = new Board();
+      data[2] = [null, null, null, null, null, null, null, null, null, "I"];
+      data[1] = ["J", "J", "J", "L", "L", "O", "O", "O", "L", "I"];
+      data[0] = ["J", "J", "J", "L", "L", "O", "O", "O", "L", "I"];
+
+      expect(b.countHeight(data)).toBe(2);
+    });
   });
 
   describe("applyPiece", () => {
@@ -204,6 +228,57 @@ describe("Board", () => {
       const piece = Move.convertPiece("I");
       const { score } = b.evaluatePieceLocation(piece);
       expect(score).toBeLessThan(0);
+    });
+
+    test("T as first piece", () => {
+      const b = new Board();
+      b.state = data;
+
+      let newPiece = Move.convertPiece("T");
+      const { score, place } = b.evaluatePieceLocation(newPiece);
+
+      expect(place).toEqual([
+        [0, 0],
+        [0, 1],
+        [0, 2],
+        [1, 1],
+      ]);
+    });
+  });
+
+  describe("nextValidPlacement", () => {
+    test("T as first piece", () => {
+      const b = new Board();
+      b.state = data;
+
+      let newPiece = Move.convertPiece("T");
+      const place = b.nextValidPlacement(newPiece);
+
+      expect(place).toEqual([
+        [0, 0],
+        [0, 1],
+        [0, 2],
+        [1, 1],
+      ]);
+    });
+
+    test("Z piece with no great options", () => {
+      const b = new Board();
+      data[3] = ["I", "I", "I", "I", "I", "I", "I", "I", "I", null];
+      data[2] = ["I", "I", "I", "I", "I", "I", "I", "I", "I", null];
+      data[1] = ["I", "I", "I", "I", "I", "I", "I", "I", "I", null];
+      data[0] = ["I", "I", "I", "I", "I", "I", "I", "I", "I", null];
+      b.state = data;
+
+      let newPiece = Move.convertPiece("Z");
+      const place = b.nextValidPlacement(newPiece);
+
+      expect(place).toEqual([
+        [4, 2],
+        [4, 1],
+        [5, 1],
+        [5, 0],
+      ]);
     });
   });
 });

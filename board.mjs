@@ -1,8 +1,8 @@
 import { Move } from "./move.mjs";
 
-const GAP_WEIGHT = -5;
+const GAP_WEIGHT = -20;
 const CLEARED_WEIGHT = 1;
-const HEIGHT_WEIGHT = -5;
+const HEIGHT_WEIGHT = -1;
 export class Board {
   //   attr_reader :topmost, :rightmost
   state;
@@ -46,7 +46,7 @@ export class Board {
         }
 
         // can go straight down
-        for (let i = row + 1; i < this.state.length - 1; i++) {
+        for (let i = row + 1; i < this.state.length; i++) {
           if (this.state[i][col]) {
             result = false;
           }
@@ -68,8 +68,8 @@ export class Board {
     let bestPlace;
     let bestScore = -1000000;
 
-    for (let i = 0; i < this.state.length - 1; i++) {
-      for (let j = 0; j < this.state[i].length - 1; j++) {
+    for (let i = 0; i < this.state.length; i++) {
+      for (let j = 0; j < this.state[i].length; j++) {
         const newPlace = Move.shift(piece, i, j);
         const { score, place } = this.evaluatePieceLocation(newPlace);
 
@@ -80,6 +80,13 @@ export class Board {
       }
     }
 
+    if (bestPlace) {
+      const newBoard = this.applyPiece(bestPlace);
+      console.log("height: " + this.countHeight(newBoard));
+      console.log("gap: " + this.countGaps(newBoard));
+      console.log("cleared: " + this.countClearedRows(newBoard));
+    }
+
     return bestPlace;
   }
 
@@ -87,9 +94,11 @@ export class Board {
     let bestPiece = piece;
     let bestScore = -1000000;
 
+    let rotated = JSON.parse(JSON.stringify(piece));
+
     for (let i = 0; i < 4; i++) {
       // check all 4 rotations
-      const rotated = Move.rotate(piece);
+      rotated = Move.rotate(rotated);
 
       if (this.isValid(rotated)) {
         const newState = this.applyPiece(rotated);
@@ -144,7 +153,7 @@ export class Board {
     let gaps = 0;
 
     if (newState) {
-      for (let j = 0; j < newState[0].length - 1; j++) {
+      for (let j = 0; j < newState[0].length; j++) {
         let foundBlock = false;
 
         for (let i = newState.length - 1; i >= 0; i--) {
@@ -165,7 +174,7 @@ export class Board {
     let maxHeight = 0;
 
     if (newState) {
-      for (let j = 0; j < newState[0].length - 1; j++) {
+      for (let j = 0; j < newState[0].length; j++) {
         for (let i = newState.length - 1; i >= 0; i--) {
           if (newState[i][j]) {
             if (i > maxHeight) {
