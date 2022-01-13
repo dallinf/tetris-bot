@@ -12,6 +12,7 @@ export class Server {
 
     const gameId = response.headers.get("location");
     const gameID = gameId.substring(1);
+    console.log(gameID);
     return gameID;
   }
 
@@ -28,6 +29,10 @@ export class Server {
   }
 
   async playerMoves(gameId, xTurnToken, xPlayerId, params) {
+    // console.log(
+    //   `gameId: ${gameId} - turn: ${xTurnToken} - player - ${xPlayerId}`
+    // );
+    // console.log(params);
     const response = await fetch(`${url}/${gameId}/moves`, {
       method: "POST",
       headers: {
@@ -43,10 +48,12 @@ export class Server {
     let data;
     if (statusCode === 200) {
       try {
+        let body = "";
         for await (const chunk of response.body) {
-          data = JSON.parse(chunk.toString());
-          break;
+          body += chunk.toString();
         }
+
+        data = JSON.parse(body);
       } catch (err) {
         console.error(err.stack);
       }

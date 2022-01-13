@@ -1,8 +1,9 @@
 import { Move } from "./move.mjs";
 
-const GAP_WEIGHT = -20;
-const CLEARED_WEIGHT = 1;
-const HEIGHT_WEIGHT = -1;
+const GAP_WEIGHT = -1;
+const CLEARED_WEIGHT = 2;
+const HEIGHT_WEIGHT = -3;
+
 export class Board {
   //   attr_reader :topmost, :rightmost
   state;
@@ -80,12 +81,12 @@ export class Board {
       }
     }
 
-    if (bestPlace) {
-      const newBoard = this.applyPiece(bestPlace);
-      console.log("height: " + this.countHeight(newBoard));
-      console.log("gap: " + this.countGaps(newBoard));
-      console.log("cleared: " + this.countClearedRows(newBoard));
-    }
+    // if (bestPlace) {
+    //   const newBoard = this.applyPiece(bestPlace);
+    //   console.log("height: " + this.countHeight(newBoard));
+    //   console.log("gap: " + this.countGaps(newBoard));
+    //   console.log("cleared: " + this.countClearedRows(newBoard));
+    // }
 
     return bestPlace;
   }

@@ -23,7 +23,8 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}/bot.mjs"
+            "program": "${workspaceFolder}/bot.mjs",
+            "runtimeArgs": ["SafetyBot", "2"]
         }
     ]
 }

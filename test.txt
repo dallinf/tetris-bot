@@ -1,0 +1,301 @@
+height: 2
+gap: 1
+cleared: 0
+[
+  { row: 2, col: 0 },
+  { row: 1, col: 0 },
+  { row: 1, col: 1 },
+  { row: 0, col: 1 }
+]
+height: 2
+gap: 1
+cleared: 0
+[
+  { row: 2, col: 8 },
+  { row: 1, col: 8 },
+  { row: 0, col: 8 },
+  { row: 1, col: 9 }
+]
+height: 2
+gap: 2
+cleared: 0
+[
+  { row: 2, col: 2 },
+  { row: 1, col: 2 },
+  { row: 1, col: 3 },
+  { row: 0, col: 3 }
+]
+height: 2
+gap: 3
+cleared: 0
+[
+  { row: 1, col: 4 },
+  { row: 1, col: 5 },
+  { row: 0, col: 5 },
+  { row: 0, col: 6 }
+]
+height: 2
+gap: 4
+cleared: 0
+[
+  { row: 2, col: 3 },
+  { row: 2, col: 4 },
+  { row: 2, col: 5 },
+  { row: 2, col: 6 }
+]
+height: 4
+gap: 4
+cleared: 0
+[
+  { row: 4, col: 1 },
+  { row: 3, col: 1 },
+  { row: 2, col: 1 },
+  { row: 3, col: 2 }
+]
+height: 4
+gap: 4
+cleared: 0
+[
+  { row: 4, col: 2 },
+  { row: 4, col: 3 },
+  { row: 3, col: 3 },
+  { row: 3, col: 4 }
+]
+height: 5
+gap: 5
+cleared: 0
+[
+  { row: 5, col: 1 },
+  { row: 5, col: 2 },
+  { row: 5, col: 3 },
+  { row: 5, col: 4 }
+]
+height: 7
+gap: 6
+cleared: 0
+[
+  { row: 7, col: 1 },
+  { row: 7, col: 2 },
+  { row: 6, col: 2 },
+  { row: 6, col: 3 }
+]
+height: 7
+gap: 6
+cleared: 0
+[
+  { row: 5, col: 8 },
+  { row: 4, col: 8 },
+  { row: 3, col: 8 },
+  { row: 4, col: 9 }
+]
+height: 8
+gap: 9
+cleared: 0
+[
+  { row: 8, col: 1 },
+  { row: 8, col: 2 },
+  { row: 8, col: 3 },
+  { row: 8, col: 4 }
+]
+height: 10
+gap: 11
+cleared: 0
+[
+  { row: 10, col: 1 },
+  { row: 9, col: 1 },
+  { row: 10, col: 2 },
+  { row: 10, col: 3 }
+]
+height: 12
+gap: 13
+cleared: 0
+[
+  { row: 12, col: 1 },
+  { row: 11, col: 1 },
+  { row: 12, col: 2 },
+  { row: 12, col: 3 }
+]
+height: 14
+gap: 13
+cleared: 0
+[
+  { row: 14, col: 1 },
+  { row: 13, col: 1 },
+  { row: 13, col: 2 },
+  { row: 13, col: 3 }
+]
+height: 15
+gap: 13
+cleared: 0
+[
+  { row: 15, col: 1 },
+  { row: 15, col: 2 },
+  { row: 14, col: 2 },
+  { row: 14, col: 3 }
+]
+height: 15
+gap: 13
+cleared: 0
+[
+  { row: 4, col: 5 },
+  { row: 3, col: 5 },
+  { row: 4, col: 6 },
+  { row: 3, col: 6 }
+]
+height: 17
+gap: 14
+cleared: 0
+[
+  { row: 17, col: 1 },
+  { row: 16, col: 1 },
+  { row: 16, col: 2 },
+  { row: 16, col: 3 }
+]
+height: 17
+gap: 14
+cleared: 0
+[
+  { row: 8, col: 8 },
+  { row: 7, col: 8 },
+  { row: 6, col: 8 },
+  { row: 7, col: 9 }
+]
+height: 17
+gap: 21
+cleared: 0
+[
+  { row: 6, col: 5 },
+  { row: 5, col: 5 },
+  { row: 6, col: 6 },
+  { row: 6, col: 7 }
+]
+height: 17
+gap: 25
+cleared: 0
+[
+  { row: 9, col: 6 },
+  { row: 9, col: 7 },
+  { row: 9, col: 8 },
+  { row: 9, col: 9 }
+]
+height: 17
+gap: 25
+cleared: 0
+[
+  { row: 10, col: 6 },
+  { row: 10, col: 7 },
+  { row: 10, col: 8 },
+  { row: 10, col: 9 }
+]
+height: 17
+gap: 25
+cleared: 0
+[
+  { row: 13, col: 8 },
+  { row: 12, col: 8 },
+  { row: 11, col: 8 },
+  { row: 12, col: 9 }
+]
+height: 18
+gap: 25
+cleared: 0
+[
+  { row: 18, col: 1 },
+  { row: 18, col: 2 },
+  { row: 17, col: 2 },
+  { row: 17, col: 3 }
+]
+height: 18
+gap: 25
+cleared: 0
+[
+  { row: 12, col: 6 },
+  { row: 11, col: 6 },
+  { row: 12, col: 7 },
+  { row: 11, col: 7 }
+]
+height: 18
+gap: 26
+cleared: 0
+[
+  { row: 15, col: 7 },
+  { row: 14, col: 7 },
+  { row: 14, col: 8 },
+  { row: 14, col: 9 }
+]
+height: 18
+gap: 26
+cleared: 0
+[
+  { row: 17, col: 7 },
+  { row: 16, col: 7 },
+  { row: 16, col: 8 },
+  { row: 15, col: 8 }
+]
+height: 18
+gap: 26
+cleared: 0
+[
+  { row: 18, col: 8 },
+  { row: 17, col: 8 },
+  { row: 17, col: 9 },
+  { row: 16, col: 9 }
+]
+height: 18
+gap: 27
+cleared: 0
+[
+  { row: 10, col: 4 },
+  { row: 9, col: 4 },
+  { row: 9, col: 5 },
+  { row: 8, col: 5 }
+]
+height: 18
+gap: 29
+cleared: 0
+[
+  { row: 13, col: 4 },
+  { row: 12, col: 4 },
+  { row: 11, col: 4 },
+  { row: 12, col: 5 }
+]
+height: 18
+gap: 29
+cleared: 0
+[
+  { row: 14, col: 4 },
+  { row: 14, col: 5 },
+  { row: 13, col: 5 },
+  { row: 13, col: 6 }
+]
+height: 18
+gap: 30
+cleared: 0
+[
+  { row: 16, col: 4 },
+  { row: 15, col: 4 },
+  { row: 15, col: 5 },
+  { row: 15, col: 6 }
+]
+height: 18
+gap: 30
+cleared: 0
+[
+  { row: 18, col: 4 },
+  { row: 17, col: 4 },
+  { row: 17, col: 5 },
+  { row: 16, col: 5 }
+]
+file:///Users/dallinfrandsen/podium/tetris-bot/board.mjs:121
+    piece.forEach((block) => {
+          ^
+
+TypeError: Cannot read properties of undefined (reading 'forEach')
+    at Board.applyPiece (file:///Users/dallinfrandsen/podium/tetris-bot/board.mjs:121:11)
+    at Board.nextValidPlacement (file:///Users/dallinfrandsen/podium/tetris-bot/board.mjs:83:27)
+    at Agent.run (file:///Users/dallinfrandsen/podium/tetris-bot/agent.mjs:51:35)
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+    at async file:///Users/dallinfrandsen/podium/tetris-bot/bot.mjs:12:1
+
+Node.js v17.2.0
+dallinfrandsen@Dallin-Frandsen tetris-bot % 

@@ -19,18 +19,25 @@ export class Agent {
     this.server = new Server();
   }
 
-  async startSoloGame(playerName) {
-    this.gameId = await this.server.createGame({
-      seats: 1,
+  async startGame(playerName, seats) {
+    const gameId = await this.server.createGame({
+      seats,
       initial_garbage: 0,
     });
 
-    const currentState = await this.server.joinGame(this.gameId, playerName);
+    return this.joinGame(gameId, playerName);
+  }
+
+  async joinGame(gameId, playerName) {
+    this.gameId = gameId;
+    const currentState = await this.server.joinGame(gameId, playerName);
     this.game.update(currentState.data);
     this.playerId = currentState.playerId;
     this.turnToken = currentState.turnToken;
     this.player = this.game.getPlayer(currentState.playerId);
     this.board = this.player.board;
+
+    return this.gameId;
   }
 
   updateGame(game) {
@@ -43,9 +50,9 @@ export class Agent {
     let activeGame = true;
     let wait = 0;
 
-    while (activeGame && this.game.isActive) {
+    while (activeGame && this.game.isActive()) {
+      console.log(`my playerid = ${this.playerId}`);
       // Figure out the next best move
-      let x;
       const piece = Move.convertPiece(this.game.currentPiece);
 
       const newPiece = this.board.nextValidPlacement(piece);
@@ -53,7 +60,6 @@ export class Agent {
       if (newPiece) {
         const playerMoveParams = Move.pieceToRowCol(newPiece);
 
-        console.log(playerMoveParams);
         const moveResponse = await this.server.playerMoves(
           this.gameId,
           this.turnToken,
@@ -78,7 +84,7 @@ export class Agent {
 
         wait = 0;
       } else {
-        if (wait > 10) {
+        if (wait > 20) {
           activeGame = false;
         } else {
           const myPromise = new Promise((resolve) => {
