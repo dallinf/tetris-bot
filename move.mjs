@@ -29,6 +29,19 @@ export class Move {
     });
   }
 
+  static getNumRotations(pieceType) {
+    switch (pieceType) {
+      case "I":
+      case "O":
+        return 1;
+      case "S":
+      case "Z":
+        return 2;
+      default:
+        return 4;
+    }
+  }
+
   static convertPiece(pieceName) {
     switch (pieceName) {
       case "I":

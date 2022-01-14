@@ -51,11 +51,9 @@ export class Agent {
     let wait = 0;
 
     while (activeGame && this.game.isActive()) {
-      console.log(`my playerid = ${this.playerId}`);
+      // console.log(`my playerid = ${this.playerId}`);
       // Figure out the next best move
-      const piece = Move.convertPiece(this.game.currentPiece);
-
-      const newPiece = this.board.nextValidPlacement(piece);
+      const newPiece = this.board.nextValidPlacement(this.game.currentPiece);
 
       if (newPiece) {
         const playerMoveParams = Move.pieceToRowCol(newPiece);

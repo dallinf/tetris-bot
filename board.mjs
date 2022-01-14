@@ -65,14 +65,19 @@ export class Board {
     return result && pieceBelow;
   }
 
-  nextValidPlacement(piece) {
+  nextValidPlacement(pieceType) {
     let bestPlace = [];
     let bestScore = -1000000;
+
+    const piece = Move.convertPiece(pieceType);
 
     for (let i = 0; i < this.state.length; i++) {
       for (let j = 0; j < this.state[i].length; j++) {
         const newPlace = Move.shift(piece, i, j);
-        const { score, place } = this.evaluatePieceLocation(newPlace);
+        const { score, place } = this.evaluatePieceLocation(
+          newPlace,
+          pieceType
+        );
 
         if (score > bestScore) {
           bestPlace = [place];
@@ -94,15 +99,17 @@ export class Board {
     return bestPlace[randomIndex];
   }
 
-  evaluatePieceLocation(piece) {
+  evaluatePieceLocation(piece, pieceType) {
     let bestPiece = [piece];
     let bestScore = -1000000;
 
+    let numRotations = Move.getNumRotations(pieceType);
     let rotated = JSON.parse(JSON.stringify(piece));
 
-    for (let i = 0; i < 4; i++) {
-      // check all 4 rotations
-      rotated = Move.rotate(rotated);
+    for (let i = 0; i < numRotations; i++) {
+      if (i > 0) {
+        rotated = Move.rotate(rotated);
+      }
 
       if (this.isValid(rotated)) {
         const newState = this.applyPiece(rotated);
