@@ -66,7 +66,7 @@ export class Board {
   }
 
   nextValidPlacement(piece) {
-    let bestPlace;
+    let bestPlace = [];
     let bestScore = -1000000;
 
     for (let i = 0; i < this.state.length; i++) {
@@ -75,8 +75,10 @@ export class Board {
         const { score, place } = this.evaluatePieceLocation(newPlace);
 
         if (score > bestScore) {
-          bestPlace = place;
+          bestPlace = [place];
           bestScore = score;
+        } else if (score === bestScore) {
+          bestPlace.push(place);
         }
       }
     }
@@ -88,11 +90,12 @@ export class Board {
     //   console.log("cleared: " + this.countClearedRows(newBoard));
     // }
 
-    return bestPlace;
+    const randomIndex = Math.floor(Math.random() * bestPlace.length);
+    return bestPlace[randomIndex];
   }
 
   evaluatePieceLocation(piece) {
-    let bestPiece = piece;
+    let bestPiece = [piece];
     let bestScore = -1000000;
 
     let rotated = JSON.parse(JSON.stringify(piece));
@@ -113,12 +116,15 @@ export class Board {
 
         if (score > bestScore) {
           bestScore = score;
-          bestPiece = rotated;
+          bestPiece = [rotated];
+        } else if (score === bestScore) {
+          bestPiece.push(rotated);
         }
       }
     }
 
-    return { score: bestScore, place: bestPiece };
+    const randomIndex = Math.floor(Math.random() * bestPiece.length);
+    return { score: bestScore, place: bestPiece[randomIndex] };
   }
 
   applyPiece(piece) {
