@@ -1,7 +1,7 @@
 import { Game } from "./game.mjs";
 import { Move } from "./move.mjs";
 import { Server } from "./server.mjs";
-import { Board } from "./board.mjs";
+
 export class Agent {
   gameName;
   game;
@@ -65,7 +65,8 @@ export class Agent {
           { locations: playerMoveParams }
         );
 
-        // Make that move
+        console.log(this.board);
+
         // # no move = make intentionally invalid move, can't win
         // move = move ? move.as_json() : {};
         if (moveResponse.statusCode === 403) {
@@ -85,15 +86,19 @@ export class Agent {
         if (wait > 20) {
           activeGame = false;
         } else {
-          const myPromise = new Promise((resolve) => {
-            setTimeout(() => {
-              wait += 1;
-              resolve();
-            }, 1000);
-          });
-          await myPromise;
+          wait++;
+          await sleep(1000);
         }
       }
     }
   }
+}
+
+async function sleep(interval) {
+  const myPromise = new Promise((resolve) => {
+    setTimeout(() => {
+      resolve();
+    }, interval);
+  });
+  await myPromise;
 }

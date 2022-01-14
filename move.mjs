@@ -15,8 +15,10 @@ export class Move {
   }
 
   static shift(piece, row, col) {
+    const rowShift = row - piece[0][0];
+    const colShift = col - piece[0][1];
     return piece.map((loc) => {
-      return [loc[0] + row, loc[1] + col];
+      return [loc[0] + rowShift, loc[1] + colShift];
     });
   }
 
