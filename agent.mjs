@@ -87,7 +87,7 @@ export class Agent {
           activeGame = false;
         } else {
           wait++;
-          await sleep(1000);
+          // await sleep(1000);
         }
       }
     }

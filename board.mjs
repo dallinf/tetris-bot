@@ -1,8 +1,5 @@
 import { Move } from "./move.mjs";
-
-const GAP_WEIGHT = -1;
-const CLEARED_WEIGHT = 2;
-const HEIGHT_WEIGHT = -3;
+import { Evaluator } from "./Evaluator.mjs";
 
 export class Board {
   //   attr_reader :topmost, :rightmost
@@ -96,7 +93,13 @@ export class Board {
     // }
 
     const randomIndex = Math.floor(Math.random() * bestPlace.length);
-    return bestPlace[randomIndex];
+    const chosenMove = bestPlace[randomIndex];
+    console.log(
+      `Type: ${pieceType} - Score: ${bestScore} - Piece: ${JSON.stringify(
+        chosenMove
+      )}`
+    );
+    return chosenMove;
   }
 
   evaluatePieceLocation(piece, pieceType) {
@@ -115,11 +118,8 @@ export class Board {
         const newState = this.applyPiece(rotated);
         const clearedRows = this.countClearedRows(newState);
         const gaps = this.countGaps(newState);
-        const height = this.countHeight(newState);
-        const score =
-          gaps * GAP_WEIGHT +
-          clearedRows * CLEARED_WEIGHT +
-          height * HEIGHT_WEIGHT;
+        const heightStats = this.getHeightStats(newState);
+        const score = Evaluator.getScore(gaps, clearedRows, heightStats);
 
         if (score > bestScore) {
           bestScore = score;
@@ -184,21 +184,93 @@ export class Board {
     return gaps;
   }
 
-  countHeight(newState) {
-    let maxHeight = 0;
+  countFutureFlexibility(newState) {
+    const heights = this.getColumnHeights(newState);
+    const pieces = {
+      T: false,
+      Z: false,
+      S: false,
+      I: false,
+      J: false,
+      L: false,
+      O: false,
+    };
+    // const pieces = { S: false };
 
-    if (newState) {
-      for (let j = 0; j < newState[0].length; j++) {
-        for (let i = newState.length - 1; i >= 0; i--) {
-          if (newState[i][j]) {
-            if (i > maxHeight) {
-              maxHeight = i;
+    const oldGaps = this.countGaps(newState);
+
+    heights.forEach((row, col) => {
+      Object.keys(pieces).forEach((pieceType) => {
+        let piece = Move.convertPiece(pieceType);
+        piece = Move.shift(piece, heights[row], col);
+
+        let numRotations = Move.getNumRotations(pieceType);
+
+        for (let i = 0; i < numRotations; i++) {
+          if (i > 0) {
+            piece = Move.rotate(piece);
+          }
+
+          if (this.isValid(piece)) {
+            const stateWithPiece = this.applyPiece(piece);
+            const newGaps = this.countGaps(stateWithPiece);
+            const clearedRows = this.countClearedRows(stateWithPiece);
+
+            if (newGaps <= oldGaps || clearedRows > 0) {
+              pieces[pieceType] = true;
             }
           }
+        }
+      });
+    });
+
+    let numFuturePieces = 0;
+
+    Object.values(pieces).forEach((v) => {
+      if (v) {
+        numFuturePieces++;
+      }
+    });
+
+    return numFuturePieces;
+  }
+
+  getColumnHeights(newState) {
+    let heights = [];
+
+    for (let j = 0; j < newState[0].length; j++) {
+      heights.push(0);
+
+      for (let i = 0; i < newState.length; i++) {
+        if (newState[i][j]) {
+          heights[j] = i + 1;
         }
       }
     }
 
-    return maxHeight;
+    return heights;
+  }
+
+  getHeightStats(newState) {
+    let avgHeight = 0;
+    let minHeight = 100;
+    let maxHeight = 0;
+
+    if (newState) {
+      const heights = this.getColumnHeights(newState);
+
+      heights.forEach((height) => {
+        if (height < minHeight) {
+          minHeight = height;
+        }
+        if (height > maxHeight) {
+          maxHeight = height;
+        }
+      });
+
+      avgHeight = heights.reduce((a, b) => a + b) / heights.length;
+    }
+
+    return { minHeight, maxHeight, avgHeight };
   }
 }

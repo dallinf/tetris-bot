@@ -177,6 +177,19 @@ describe("Board", () => {
       expect(b.countGaps(newState)).toBe(2);
     });
 
+    describe("countAvgHeight", () => {
+      test("simple", () => {
+        const b = new Board();
+        data[1] = [null, "J", "J", null, null, null, "O", "O", "L", null];
+        data[0] = ["I", "I", "I", "I", "I", "I", "I", "I", "I", "I"];
+        b.state = data;
+
+        const stats = b.getHeightStats(b.state);
+        expect(stats.minHeight).toBe(1);
+        expect(stats.maxHeight).toBe(2);
+      });
+    });
+
     test("where there are gaps to the floor", () => {
       const b = new Board();
       data[3] = ["I", "I", "I", "I", "I", "I", "I", "I", "I", null];
@@ -193,14 +206,41 @@ describe("Board", () => {
     });
   });
 
-  describe("countHeight", () => {
+  describe("countFutureFlexibility", () => {
+    test("all pieces possible", () => {
+      const b = new Board();
+      data[0] = [null, null, null, null, "I", null, null, null, null, null];
+      b.state = data;
+
+      expect(b.countFutureFlexibility(data)).toBe(7);
+    });
+
+    test("5 pieces possible", () => {
+      const b = new Board();
+      data[0] = [null, null, null, null, null, null, null, null, null, null];
+      b.state = data;
+
+      expect(b.countFutureFlexibility(data)).toBe(5);
+    });
+
+    // test("7 pieces possible because of cleared rows", () => {
+    //   const b = new Board();
+    //   data[1] = [null, null, "I", "I", "I", "I", "I", "I", "I", "I"];
+    //   data[0] = [null, "I", "I", "I", "I", "I", "I", "I", "I", "I"];
+    //   b.state = data;
+
+    //   expect(b.countFutureFlexibility(data)).toBe(7);
+    // });
+  });
+
+  describe("getHeightStats", () => {
     test("last column", () => {
       const b = new Board();
       data[2] = [null, null, null, null, null, null, null, null, null, "I"];
       data[1] = ["J", "J", "J", "L", "L", "O", "O", "O", "L", "I"];
       data[0] = ["J", "J", "J", "L", "L", "O", "O", "O", "L", "I"];
 
-      expect(b.countHeight(data)).toBe(2);
+      expect(b.getHeightStats(data).maxHeight).toBe(3);
     });
   });
 
@@ -226,7 +266,7 @@ describe("Board", () => {
       b.state = data;
 
       const piece = Move.convertPiece("I");
-      const { score } = b.evaluatePieceLocation(piece);
+      const { score } = b.evaluatePieceLocation(piece, "I");
       expect(score).toBeLessThan(0);
     });
 
@@ -235,7 +275,7 @@ describe("Board", () => {
       b.state = data;
 
       let newPiece = Move.convertPiece("T");
-      const { score, place } = b.evaluatePieceLocation(newPiece);
+      const { score, place } = b.evaluatePieceLocation(newPiece, "T");
 
       expect(place).toEqual([
         [0, 0],
@@ -244,6 +284,78 @@ describe("Board", () => {
         [1, 1],
       ]);
     });
+
+    test("O that shouldn't increase height", () => {
+      const b = new Board();
+      data = [
+        ["I", "J", "J", "J", "Z", "Z", null, "I", "S", "S"],
+        ["I", "Z", "Z", "J", "Z", "Z", "L", null, "T", "T"],
+        ["I", "J", "J", "J", null, "Z", "L", null, "Z", "T"],
+        ["I", "L", "L", "L", null, "O", "O", null, "Z", "Z"],
+        [null, "O", "O", "L", null, "O", "O", null, null, "Z"],
+        [null, "O", "O", "S", null, "L", "L", null, "O", "O"],
+        [null, null, "S", "S", null, "L", null, null, "O", "O"],
+        [null, null, "S", "S", null, "L", null, null, "O", "O"],
+        [null, null, "S", "S", null, null, null, null, "O", "O"],
+        [null, null, "S", null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null, null, null],
+      ];
+      b.state = data;
+
+      let newPiece = Move.convertPiece("O");
+      newPiece = Move.shift(newPiece, 10, 2);
+      const place1 = b.evaluatePieceLocation(newPiece, "O");
+
+      newPiece = Move.shift(newPiece, 9, 8);
+      const place2 = b.evaluatePieceLocation(newPiece, "O");
+
+      expect(place2.score).toBeGreaterThan(place1.score);
+    });
+
+    test("I that shouldn't increase height", () => {
+      const b = new Board();
+      data = [
+        [null, "L", "L", "S", "L", "L", "L", "L", "Z", "Z"],
+        [null, "L", "S", "S", "L", null, "L", "Z", "Z", "T"],
+        [null, "L", "S", null, "L", null, "L", "S", "T", "T"],
+        [null, null, null, null, null, null, "S", "S", null, "T"],
+        [null, null, null, null, null, null, "S", "O", "O", null],
+        [null, null, null, null, null, null, null, "O", "O", null],
+        [null, null, null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null, null, null],
+      ];
+      b.state = data;
+
+      let newPiece = Move.convertPiece("I");
+      newPiece = Move.shift(newPiece, 0, 0);
+      const place1 = b.evaluatePieceLocation(newPiece, "I");
+
+      newPiece = Move.shift(newPiece, 5, 6);
+      const place2 = b.evaluatePieceLocation(newPiece, "I");
+
+      expect(place2.score).toBeLessThan(place1.score);
+    });
   });
 
   describe("nextValidPlacement", () => {
@@ -251,15 +363,12 @@ describe("Board", () => {
       const b = new Board();
       b.state = data;
 
-      let newPiece = Move.convertPiece("T");
-      const place = b.nextValidPlacement(newPiece);
+      const place = b.nextValidPlacement("T");
 
-      expect(place).toEqual([
-        [0, 0],
-        [0, 1],
-        [0, 2],
-        [1, 1],
-      ]);
+      expect(place[0][0]).toBeLessThanOrEqual(2);
+      expect(place[1][0]).toBeLessThanOrEqual(2);
+      expect(place[2][0]).toBeLessThanOrEqual(2);
+      expect(place[3][0]).toBeLessThanOrEqual(2);
     });
 
     test("Z piece with no great options", () => {
@@ -270,15 +379,12 @@ describe("Board", () => {
       data[0] = ["I", "I", "I", "I", "I", "I", "I", "I", "I", null];
       b.state = data;
 
-      let newPiece = Move.convertPiece("Z");
-      const place = b.nextValidPlacement(newPiece);
+      const place = b.nextValidPlacement("Z");
 
-      expect(place).toEqual([
-        [4, 2],
-        [4, 1],
-        [5, 1],
-        [5, 0],
-      ]);
+      expect(place[0][0]).toBeLessThanOrEqual(5);
+      expect(place[1][0]).toBeLessThanOrEqual(5);
+      expect(place[2][0]).toBeLessThanOrEqual(5);
+      expect(place[3][0]).toBeLessThanOrEqual(5);
     });
   });
 });
